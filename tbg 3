@@ -1,0 +1,192 @@
+#include<iostream>
+using namespace std;
+
+int MonsterGen(); //function prototype------------------------------------------------------
+void BattleSim();
+
+//global varibales: can be seen and used by ALL functions in the game
+string inventory[4];
+int PlayerHealth = 100;
+bool hasWon = false;
+
+
+int main() {
+	system("color 8E"); //yellow text on grey background 
+	int room = 1;
+	string input;
+	while (PlayerHealth >0 && hasWon == false && input != "quit")
+
+	while (input != "quit") { //GAME LOOP!!------------------
+
+		cout << "------------------------------------" << endl;
+		//stuff here happens EVERY TURN
+		cout << "your inventory";
+		for (int i = 0; i < 4; i++) //print the inventory
+			cout << inventory[i] << " ";
+		cout << endl << endl;
+
+		cout << "your health:" << PlayerHealth << endl << endl;
+
+		cout << "Welcome to dead city!" << endl;
+		do {
+			switch (room) {
+			case 1:
+				cout << "You wake up in a city were there's no poeple," << endl;
+				cout << "but you can only go into one building to escape." << endl; 
+				cout << "You enter the building, you are in room 1 you can go (e)ast" << endl;
+				cin >> input;
+				if (input == "e")
+					room = 2;
+				break;
+			case 2:
+				cout << "You are in room 2.There is nothing in this room, but it is very dark.You can go (s)outh." << endl;
+				cin >> input;
+				if (input == "s")
+					room = 3;
+				break;
+			case 3:
+				cout << "You are in room 3.This building is pretty creppy but you can keep explore the place" << endl; 
+				cout << "You can go (s)outh or (n)orth." << endl; 
+				cin >> input;
+				if (input == "s")
+					room = 4;
+				else if (input == "n")
+					room = 3;
+				break;
+			case 4:
+				cout << "You are in room 4.You need a flash light but you cant find one," << endl;
+				cout << "you need to explore more rooms to see You can go (e)ast." << endl;
+				cin >> input;
+				if (input == "e")
+					room = 5;
+				break;
+			case 5:
+				cout << "you got pizza";
+				inventory[0] = "pizza";
+				cout << "You are in room 5.There is a little bit of light in this room, but you need to get out of here berfore its too late." << endl;
+				cout << "so keep looking but there is a pizza that you can eat and gain health. You can go (e)ast." << endl;
+				cin >> input; 
+				cin >> input;
+				if (input == "e")
+					room = 6;
+				break;
+			case 6:
+				//inventory[1] = "flashlight!";
+				cout << "You are in room 6.You can go (s)outh." << endl;
+				cout << "There is a dusty desk: ";
+				cin >> input;
+				if (input == "south")
+					room = 7;
+				if (input == "desk" || input == "look under the desk") {
+					cout << "you found a flashlight!" << endl;
+					inventory[1] = "flashlight";
+				}
+				break;
+			case 7:
+				cout << "You are in room 7. You can go (s)outh." << endl;
+				if (inventory[2] != "sword") //only sat there's a sword if you didn't pick it up yet
+					cout << "there's a sword on the floor";
+				cin >> input;
+				if (input == "s")
+					room = 8;
+					if (inventory[1] == "flashlight") {
+						cout << "you use the flashlight to see the sowrd" << endl;
+						inventory[1] = " "; //erases the flashligh!
+					}
+					else if (input == "sword" || input == "pick up the sword" || input == "grab") {
+						cout << "you got the sword!" << endl;
+						inventory[2] = "sword";
+					}
+				break;
+			case 8:
+				cout << "You are in room 8. You can go (e)ast." << endl;
+				if (inventory[3] != "staff") //only say if there's a staff if you didn't pick it up
+					cout << "there's a staff on the floor";
+				    cin >> input;
+					if (input == "e")
+						room = 9;
+						if (inventory[3] == "staff") {
+							cout << "you can get the staff" << endl;
+						}
+						else if (input == "staff" || input == "pick up staff" || input == "grab") {
+							cout << "you got the staff" << endl;
+							inventory[3] = "staff";
+						}
+				break;
+			case 9:
+				system("color 47");
+				cout << "You are in room 9. The second to last room." << endl;
+				cout << "OH NO, there is a monster in this room, you need to kill this monster to leave" << endl; 
+				cout << "Hurry use the weapons you have fight this monster " << endl; 
+				cin >> input;
+				if (input == "fight")
+					BattleSim();
+				if (input == "e")
+					room = 10;
+				break;
+			case 10:
+				cout << "You are in room 10. the last room. You defeat the monster and go over its cropse into the partol. You are back into the real world" << endl;
+				cout << "game over, YOU WIN!" << endl;
+				cin >> input;
+				hasWon = true;
+				break;
+
+
+
+			}//end switch
+		} while (input != "q"); //end game loop
+		if (hasWon == true) {
+			cout << "thanks for playing!" << endl;
+		} 
+		else {
+			cout << "javier stinks" << endl;
+		}
+	}//end of main
+}
+
+//function definition
+int MonsterGen() {
+	int num = rand() % 100; //generates number between 0-99
+	if (num < 30) {
+		cout << "A zombie appears!" << endl;
+		return 25; //represents the damage
+	}
+
+}
+void BattleSim() {
+	int MonsterHealth = 20; //LOCAL variables: can only be seen and used in this function
+	int damage;
+	char dummy;
+	cout << endl << endl << endl << "-----------------------------ENCOUNTER--------------------------------" << endl;
+	cout << "a MONSTER attack!" << endl;
+	while (PlayerHealth > 0 && MonsterHealth > 0) {
+		//player DMG 
+		damage = rand() % 11 + 5; // number between 0-10
+		cout << "You hit the monster for" << " " << damage << " " << "damage" << endl;
+		MonsterHealth -= damage;
+		cout << "Press any key to continue" << endl;
+		cin >> dummy;
+
+		//moster DMG
+		damage = rand() % 21 + 3; //number between 0-20
+		cout << "the monster hits you for" << " " << damage << " " << "damage" << endl;
+		PlayerHealth -= damage;
+		cout << "Press any key to continue" << endl;
+		cin >> dummy;
+
+
+		//value print for health
+		if (PlayerHealth > 0)
+			cout << "HP: " << PlayerHealth << endl;
+
+		else
+			cout << "You died" << endl;
+		if (MonsterHealth > 0)
+			cout << "Monster HP:" << MonsterHealth << endl;
+		else
+			cout << "you survived" << endl;
+		cout << endl;
+
+	} //end of mini loop
+	cout << endl << endl << "---------------------BATTLE-FINISH----------------------------" << endl;
+}
